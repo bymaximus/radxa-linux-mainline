@@ -8,7 +8,7 @@
 #include <dt-bindings/input/input.h>
 #include <dt-bindings/rkfb/rk_fb.h>
 //#include <dt-bindings/display/rk_fb.h>
-#include "rk616.dtsi"
+//#include "rk616.dtsi"
 #include "rk3188.dtsi"
 //#include "lcd-box.dtsi"
 #include <dt-bindings/display/screen-timing/lcd-box.dtsi>
