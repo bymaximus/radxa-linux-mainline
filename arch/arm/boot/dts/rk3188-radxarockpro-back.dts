@@ -1,8 +1,17 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright (c) 2013 Heiko Stuebner <heiko@sntech.de>
+ */
+
 /dts-v1/;
 #include <dt-bindings/i2c/i2c.h>
 #include <dt-bindings/input/input.h>
 #include <dt-bindings/rkfb/rk_fb.h>
+//#include <dt-bindings/display/rk_fb.h>
+//#include "rk616.dtsi"
 #include "rk3188.dtsi"
+//#include "lcd-box.dtsi"
+//#include <dt-bindings/display/screen-timing/lcd-box.dtsi>
 / {
 	model = "Radxa Rock Pro";
 	compatible = "radxa,rock", "rockchip,rk3188", "rockchip,rk3066", "rockchip,rk3066a";
@@ -57,7 +66,7 @@
 		compatible = "simple-audio-card";
 		simple-audio-card,name = "SPDIF";
 
-		simple-audio-card,dai-link@1 {
+		simple-audio-card,dai-link@1 {  /* S/PDIF - S/PDIF */
 			cpu { sound-dai = <&spdif>; };
 			codec { sound-dai = <&spdif_out>; };
 		};
@@ -121,6 +130,45 @@
 		regulator-boot-on;
 	};
 
+	/*hdmi: hdmi@10114000 {
+		compatible = "rockchip,rk3066-hdmi";
+		reg = <0x10114000 0x2000>;
+		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
+		clocks = <&cru HCLK_HDMI>;
+		clock-names = "hclk";
+		pinctrl-names = "default";
+		pinctrl-0 = <&hdmii2c_xfer>, <&hdmi_hpd>;
+		power-domains = <&power RK3066_PD_VIO>;
+		rockchip,grf = <&grf>;
+		status = "disabled";
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			hdmi_in: port@0 {
+				reg = <0>;
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				hdmi_in_vop0: endpoint@0 {
+					reg = <0>;
+					remote-endpoint = <&vop0_out_hdmi>;
+				};
+
+				hdmi_in_vop1: endpoint@1 {
+					reg = <1>;
+					remote-endpoint = <&vop1_out_hdmi>;
+				};
+			};
+
+			hdmi_out: port@1 {
+				reg = <1>;
+			};
+		};
+	};*/
+
+
 	codec_hdmi_i2s: codec-hdmi-i2s {
 		compatible = "hdmi-i2s";
 	};
@@ -128,6 +176,126 @@
 	codec_hdmi_spdif: codec-hdmi-spdif {
 		compatible = "hdmi-spdif";
 	};
+
+	/*rockchip-rk610 {
+		compatible = "rockchip-rk610";
+		dais {
+			dai0 {
+				audio-codec = <&rk610_codec>;
+				audio-controller = <&i2s0>;
+				format = "i2s";
+				//continuous-clock;
+				//bitclock-inversion;
+				//frame-inversion;
+				//bitclock-master;
+				//frame-master;
+			};
+		};
+	};*/
+	/*rockchip-rk616 {
+		compatible = "rockchip-rk616";
+		dais {
+			dai0 {
+				audio-codec = <&rk616>;
+				audio-controller = <&i2s0>;
+				format = "i2s";
+				//continuous-clock;
+				//bitclock-inversion;
+				//frame-inversion;
+				//bitclock-master;
+				//frame-master;
+			};
+			dai1 {
+				audio-codec = <&rk616>;
+				audio-controller = <&i2s0>;
+				format = "dsp_a";
+				//continuous-clock;
+				bitclock-inversion;
+				//frame-inversion;
+				//bitclock-master;
+				//frame-master;
+			};
+		};
+	};*/
+
+    /*
+	rk616,lcd0_func = <1>;
+    rk616,lcd1_func = <1>;
+    rk616,lvds_ch_nr = <1>;
+	.addr	       = 0x50,
+	#define INVALID_GPIO -1
+	*/
+	/*rk616 {
+		compatible = "rockchip,rk616";
+		rk616,scl_rate = <100000>;
+		rk616,lcd0_func = <1>;
+		rk616,lcd1_func = <0>;
+		rk616,lvds_ch_nr = <1>;
+		//rk616,hdmi_irq_gpio = <&gpio2 GPIO_D6 1>;
+		rk616,hdmi_irq_gpio = <-1>;
+		rk616-codec {
+			//spk-ctl-gpio = <&gpio2 GPIO_D7 GPIO_ACTIVE_HIGH>;
+			spk-ctl-gpio = <-1>;
+			//hp-ctl-gpio = <&gpio2 GPIO_D7 GPIO_ACTIVE_HIGH>;
+			hp-ctl-gpio = <-1>;
+			//rcv-ctl-gpio = <&gpio2 GPIO_D7 GPIO_ACTIVE_HIGH>;
+			//mic-sel-gpio = <&gpio2 GPIO_D7 GPIO_ACTIVE_HIGH>;
+
+			//delay for MOSFET or SPK power amplifier chip(ms)
+			spk-amplifier-delay = <150>;
+			hp-mosfet-delay = <50>;
+
+			//hp-mic-capture-from-linein; //If hpmic is connected to linein, set this.
+			//hp-mic-capture-from-mic2in; //If hpmic is connected to mic2, set this.
+			//virtual-hp-gnd; //If hp gnd is not connected to gnd(0V), set this.
+
+			//volume setting: 0 ~ 31, -18dB ~ 28.5dB, Step: 1.5dB
+			skp-volume = <24>;
+			hp-volume = <24>;
+			capture-volume = <24>;
+		};
+
+		power_ctr: rk616_power_ctr {
+			rk616_pwren: rk616_pwren {
+				rockchip,power_type = <GPIO>;
+				gpios = <&gpio0 GPIO_A3 GPIO_ACTIVE_HIGH>;
+				rockchip,delay = <0>;
+			};
+
+			rk616_rst: rk616_rst {
+				rockchip,power_type = <GPIO>;
+				gpios = <&gpio3 GPIO_B2 GPIO_ACTIVE_HIGH>;
+				rockchip,delay = <10>;
+			};
+		};
+	};
+
+	&rk618 {
+		status = "okay";
+
+		hdmi {
+			compatible = "rockchip,rk618-hdmi";
+			clocks = <&CRU HDMI_CLK>;
+			clock-names = "hdmi";
+			interrupt-parent = <&gpio3>;
+			interrupts = <23 IRQ_TYPE_LEVEL_HIGH>;
+			status = "okay";
+
+			ports {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				port@0 {
+					reg = <0>;
+
+					bridge_input_rgb: endpoint {
+						remote-endpoint = <&rgb_out_bridge>;
+					};
+				};
+			};
+		};
+	};
+	*/
 
 	rockchip-hdmi-i2s {
 		compatible = "rockchip-hdmi-i2s";
@@ -160,6 +328,60 @@
 		};
 	};
 
+/*
+	vop0: vop@1010c000 {
+		compatible = "rockchip,rk3188-vop";
+		reg = <0x1010c000 0x1000>;
+		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+		clocks = <&cru ACLK_LCDC0>, <&cru DCLK_LCDC0>, <&cru HCLK_LCDC0>;
+		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+		power-domains = <&power RK3188_PD_VIO>;
+		resets = <&cru SRST_LCDC0_AXI>, <&cru SRST_LCDC0_AHB>, <&cru SRST_LCDC0_DCLK>;
+		reset-names = "axi", "ahb", "dclk";
+		status = "disabled";
+
+		vop0_out: port {
+			#address-cells = <1>;
+			#size-cells = <0>;
+		};
+	};
+
+	vop1: vop@1010e000 {
+		compatible = "rockchip,rk3188-vop";
+		reg = <0x1010e000 0x1000>;
+		interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+		clocks = <&cru ACLK_LCDC1>, <&cru DCLK_LCDC1>, <&cru HCLK_LCDC1>;
+		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+		power-domains = <&power RK3188_PD_VIO>;
+		resets = <&cru SRST_LCDC1_AXI>, <&cru SRST_LCDC1_AHB>, <&cru SRST_LCDC1_DCLK>;
+		reset-names = "axi", "ahb", "dclk";
+		status = "disabled";
+
+		vop1_out: port {
+			#address-cells = <1>;
+			#size-cells = <0>;
+		};
+	};
+	*/
+
+	//3128
+
+
+	/*hdmi: hdmi@20034000 {
+		compatible = "rockchip,rk312x-hdmi";
+		reg = <0x20034000 0x4000>;
+		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+		rockchip,hdmi_lcdc_source = <0>;
+		pinctrl-names = "default", "gpio";
+		pinctrl-0 = <&hdmi_cec &hdmi_sda &hdmi_scl &hdmi_hpd>;
+		pinctrl-1 = <&hdmi_gpio>;
+		clocks = <&clk_gates3 8>, <&pd_hdmi>;
+		clock-names = "pclk_hdmi", "pd_hdmi";
+		rockchip,hdcp_enable = <0>;
+		rockchip,cec_enable = <0>;
+		status = "okay";
+	};*/
+
 	fb: fb{
 		compatible = "rockchip,rk-fb";
 		rockchip,disp-mode = <ONE_DUAL>;
@@ -173,6 +395,9 @@
 		//display-timings = <&disp_timings>;
 		#include <dt-bindings/display/screen-timing/lcd-box.dtsi>
 	};
+	/*&disp_timings {
+		native-mode = <&timing1>;
+	};	*/
 
 	lcdc0: lcdc0@1010c000 {
 		compatible = "rockchip,rk3188-lcdc";
@@ -211,7 +436,6 @@
 			};*/
 		};
 	};
-
 	lcdc1: lcdc1@1010e000 {
 		compatible = "rockchip,rk3188-lcdc";
 		rockchip,prop = <PRMRY>;
@@ -250,8 +474,39 @@
 			};*/
 		};
 	};
+	/*lcd_cs: lcd-cs {
+		rockchip,pins = <3 RK_PD6 RK_FUNC_GPIO &pcfg_pull_none>;
+	};
+
+	lcd_en: lcd-en {
+		rockchip,pins = <0 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
+	};*/
+
+
+
+	/*&lcdc {
+		//backlight = <&backlight>;
+		pinctrl-names = "default", "gpio";
+		pinctrl-0 = <&lcdc0_lcdc>;
+		pinctrl-1 = <&lcdc0_gpio>;
+
+		rockchip,fb-win-map = <FB_DEFAULT_ORDER>;
+		rockchip,fb-win-map = <FB0_WIN0_FB1_WIN1_FB2_WIN2>;
+		power_ctr: power_ctr {
+			rockchip,debug = <0>;
+			/*
+			lcd_en: lcd_en {
+				rockchip,power_type = <GPIO>;
+				gpios = <&gpio3 GPIO_C4 GPIO_ACTIVE_HIGH>;
+				rockchip,delay = <10>;
+			};
+			* /
+		};
+	};*/
+
 
 	//3128
+
 };
 
 &cpu0 {
@@ -562,3 +817,168 @@
 	mali-supply = <&vdd_log>;
 	status = "okay";
 };
+
+/*
+&vop0 {
+	status = "okay";
+};
+
+&vop0_out {
+	vop0_out_lvds: endpoint {
+		remote-endpoint = <&lvds_in_vop0>;
+	};
+};
+
+&vop1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&lcdc1_dclk &lcdc1_den &lcdc1_hsync
+		     &lcdc1_vsync &lcdc1_rgb24>;
+	status = "okay";
+};
+
+/*&vop1_out {
+	vop1_out_hdmi: endpoint {
+		remote-endpoint = <&hdmi_in_vop>;
+	};
+};*/
+
+
+/*
+
++&cru {
++    assigned-clocks = <&cru PLL_CPLL>, <&cru PLL_GPLL>,
++              <&cru ACLK_CPU>, <&cru HCLK_CPU>,
++              <&cru PCLK_CPU>, <&cru ACLK_PERI>,
++              <&cru HCLK_PERI>, <&cru PCLK_PERI>,
++              <&cru ACLK_LCDC0>, <&cru ACLK_LCDC1>;
++    assigned-clock-rates = <594000000>, <1200000000>,
++                   <300000000>, <150000000>,
++                   <75000000>, <300000000>,
++                   <150000000>, <75000000>,
++                   <297000000>, <297000000>;
++};
++
+
++	hdmi {
++		hdmi_int: hdmi-int {
++			rockchip,pins = <2 RK_PD6 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++
++		hdmi_rst: hdmi-rst {
++			rockchip,pins = <3 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
+
+
+
+disp_timings: display-timings {
+	native-mode = <&timing0>;
+	timing0: timing0 {
+			screen-type = <SCREEN_LVDS>;
+			lvds-format = <LVDS_8BIT_2>;
+			out-face    = <OUT_D888_P666>;
+			clock-frequency = <71000000>;
+			hactive = <1280>;
+			vactive = <800>;
+			hback-porch = <100>;
+			hfront-porch = <18>;
+			vback-porch = <8>;
+			vfront-porch = <6>;
+			hsync-len = <10>;
+			vsync-len = <2>;
+			hsync-active = <0>;
+			vsync-active = <0>;
+			de-active = <0>;
+			pixelclk-active = <0>;
+			swap-rb = <0>;
+			swap-rg = <0>;
+			swap-gb = <0>;
+	};
+};
+
+disp_timings: display-timings {
+        native-mode = <&timing0>;
+        timing0: timing0 {
+		screen-type = <SCREEN_EDP>;
+		out-face    = <OUT_P666>;
+		clock-frequency = <205000000>;
+		hactive = <2048>;
+		vactive = <1536>;
+		hback-porch = <5>;
+		hfront-porch = <150>;
+		vback-porch = <9>;
+		vfront-porch = <3>;
+		hsync-len = <5>;
+		vsync-len = <1>;
+		hsync-active = <0>;
+		vsync-active = <0>;
+		de-active = <0>;
+		pixelclk-active = <1>;
+		swap-rb = <0>;
+		swap-rg = <0>;
+		swap-gb = <0>;
+	};
+};
+
+
+
+  #include <dt-bindings/clock/rk3288-cru.h>
+    #include <dt-bindings/interrupt-controller/arm-gic.h>
+    #include <dt-bindings/power/rk3288-power.h>
+    vopb: vopb@ff930000 {
+      compatible = "rockchip,rk3288-vop";
+      reg = <0xff930000 0x19c>,
+            <0xff931000 0x1000>;
+      interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+      clocks = <&cru ACLK_VOP0>,
+               <&cru DCLK_VOP0>,
+               <&cru HCLK_VOP0>;
+      clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+      power-domains = <&power RK3288_PD_VIO>;
+      resets = <&cru SRST_LCDC1_AXI>,
+               <&cru SRST_LCDC1_AHB>,
+               <&cru SRST_LCDC1_DCLK>;
+      reset-names = "axi", "ahb", "dclk";
+      iommus = <&vopb_mmu>;
+      vopb_out: port {
+        #address-cells = <1>;
+        #size-cells = <0>;
+        vopb_out_edp: endpoint@0 {
+          reg = <0>;
+          remote-endpoint=<&edp_in_vopb>;
+        };
+        vopb_out_hdmi: endpoint@1 {
+          reg = <1>;
+          remote-endpoint=<&hdmi_in_vopb>;
+        };
+      };
+    };
+
+
+Possible supplies for rk3188:
+- ap0-supply:    The supply connected to AP0_VCC.
+- ap1-supply:    The supply connected to AP1_VCC.
+- cif-supply:    The supply connected to CIF_VCC.
+- flash-supply:  The supply connected to FLASH_VCC.
+- lcdc0-supply:  The supply connected to LCD0_VCC.
+- lcdc1-supply:  The supply connected to LCD1_VCC.
+- vccio0-supply: The supply connected to VCCIO0.
+- vccio1-supply: The supply connected to VCCIO1.
+                 Sometimes also labeled VCCIO1 and VCCIO2.
+
+	io-domains {
+		compatible = "rockchip,rk3288-io-voltage-domain";
+		rockchip,grf = <&grf>;
+
+		audio-supply = <&vcc18_codec>;
+		bb-supply = <&vcc33_io>;
+		dvp-supply = <&vcc_18>;
+		flash0-supply = <&vcc18_flashio>;
+		gpio1830-supply = <&vcc33_io>;
+		gpio30-supply = <&vcc33_pmuio>;
+		lcdc-supply = <&vcc33_lcd>;
+		sdcard-supply = <&vccio_sd>;
+		wifi-supply = <&vcc18_wl>;
+	};
+*/
