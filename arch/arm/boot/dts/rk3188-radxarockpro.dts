@@ -7,9 +7,11 @@
 #include <dt-bindings/i2c/i2c.h>
 #include <dt-bindings/input/input.h>
 #include <dt-bindings/rkfb/rk_fb.h>
+//#include <dt-bindings/display/rk_fb.h>
 #include "rk616.dtsi"
 #include "rk3188.dtsi"
-#include "lcd-box.dtsi"
+//#include "lcd-box.dtsi"
+#include <dt-bindings/display/screen-timing/lcd-box.dtsi>
 / {
 	model = "Radxa Rock Pro";
 	compatible = "radxa,rock", "rockchip,rk3188", "rockchip,rk3066", "rockchip,rk3066a";
