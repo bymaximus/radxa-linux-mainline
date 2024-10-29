@@ -982,3 +982,57 @@ Possible supplies for rk3188:
 		wifi-supply = <&vcc18_wl>;
 	};
 */
+
+
+		display-timings {
+			timing@0 {
+				clock-frequency = <40000000>;
+				hactive = <1920>;
+				vactive = <1080>;
+				hsync-len = <44>;
+				hfront-porch = <88>;
+				hback-porch = <148>;
+				vfront-porch = <4>;
+				vback-porch = <36>;
+				vsync-len = <5>;
+			};
+		};
+
+
+	rk1000-tve@42 {
+		status = "okay";
+		compatible = "rockchip,rk1000-tve";
+		reg = <0x42>;
+		rockchip,data-width = <24>;
+		rockchip,output = "rgb";
+		rockchip,ctl = <&rk1000_ctl>;
+		rockchip,tvemode = <0>;
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			tve_in: port@0 {
+				reg = <0>;
+				tve_in_lvds: endpoint {
+					remote-endpoint = <&lvds_out_tve>;
+				};
+			};
+		};
+	};
+	rk1000-ctl@40 {
+		compatible = "rockchip,rk1000-ctl";
+		reg = <0x40>;
+		reset-gpios = <&gpio0 1 GPIO_ACTIVE_LOW>;
+		clocks = <&cru SCLK_I2S_8CH_OUT>;
+		clock-names = "mclk";
+		pinctrl-names = "default";
+		pinctrl-0 = <&i2s_8ch_bus>;
+		status = "okay";
+	};
+rk1000_codec: rk1000-codec@60 {
+	compatible = "rockchip,rk1000_codec";
+	reg = <0x60>;
+	rockchip,spk-en-gpio = <&gpio3 31 GPIO_ACTIVE_LOW>;
+	rockchip,pa-en-time-ms = <5000>;
+	rockchip,ctl = <&rk1000_ctl>;
+	status = "okay";
+};

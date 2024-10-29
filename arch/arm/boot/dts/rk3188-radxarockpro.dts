@@ -22,7 +22,8 @@
 		autorepeat;
 
 		power {
-			gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_LOW>;
+			//gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_LOW>;
+			gpios = <&gpio0 RK_PA4 &pcfg_pull_down>;
 			linux,code = <KEY_POWER>;
 			label = "GPIO Key Power";
 			linux,input-type = <1>;
@@ -36,19 +37,22 @@
 
 		green: led-0 {
 			label = "rock:green:user1";
-			gpios = <&gpio0 RK_PB4 GPIO_ACTIVE_LOW>;
+			//gpios = <&gpio0 RK_PB4 GPIO_ACTIVE_LOW>;
+			gpios = <&gpio0 RK_PB4 &pcfg_pull_down>;
 			default-state = "off";
 		};
 
 		blue: led-1 {
 			label = "rock:blue:user2";
-			gpios = <&gpio0 RK_PB6 GPIO_ACTIVE_LOW>;
+			//gpios = <&gpio0 RK_PB6 GPIO_ACTIVE_LOW>;
+			gpios = <&gpio0 RK_PB6 &pcfg_pull_down>;
 			default-state = "off";
 		};
 
 		sleep: led-2 {
 			label = "rock:red:power";
-			gpios = <&gpio0 RK_PB7 GPIO_ACTIVE_HIGH>;
+			//gpios = <&gpio0 RK_PB7 GPIO_ACTIVE_HIGH>;
+			gpios = <&gpio0 RK_PB7 &pcfg_pull_up>;
 			default-state = "off";
 		};
 	};
@@ -70,7 +74,8 @@
 
 	ir_recv: gpio-ir-receiver {
 		compatible = "gpio-ir-receiver";
-		gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
+		//gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
+		gpios = <&gpio0 RK_PB2 &pcfg_pull_down>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&ir_recv_pin>;
 	};
@@ -78,7 +83,8 @@
 	vcc_otg: usb-otg-regulator {
 		compatible = "regulator-fixed";
 		enable-active-high;
-		gpio = <&gpio2 RK_PD7 GPIO_ACTIVE_HIGH>;
+		//gpio = <&gpio2 RK_PD7 GPIO_ACTIVE_HIGH>;
+		gpio = <&gpio2 RK_PD7 &pcfg_pull_up>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&otg_vbus_drv>;
 		regulator-name = "otg-vbus";
@@ -93,7 +99,8 @@
 		regulator-name = "sdmmc-supply";
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
-		gpio = <&gpio3 RK_PA1 GPIO_ACTIVE_LOW>;
+		//gpio = <&gpio3 RK_PA1 GPIO_ACTIVE_LOW>;
+		gpio = <&gpio3 RK_PA1 &pcfg_pull_down>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&sdmmc_pwr>;
 		startup-delay-us = <100000>;
@@ -103,7 +110,8 @@
 	vcc_host: usb-host-regulator {
 		compatible = "regulator-fixed";
 		enable-active-high;
-		gpio = <&gpio0 RK_PA3 GPIO_ACTIVE_HIGH>;
+		//gpio = <&gpio0 RK_PA3 GPIO_ACTIVE_HIGH>;
+		gpio = <&gpio0 RK_PA3 &pcfg_pull_up>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&host_vbus_drv>;
 		regulator-name = "host-pwr";
@@ -154,7 +162,7 @@
 		dais {
 			dai0 {
 				audio-codec = <&rk1000_codec>;
-				audio-controller = <&i2s>;
+				audio-controller = <&i2s0>;
 				format = "i2s";
 			};
 		};
@@ -179,30 +187,37 @@
 		rockchip,prop = <PRMRY>;
 		reg = <0x1010c000 0x2000>;
 		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-		clocks = <&clk_gates6 0>, <&dclk_lcdc0>, <&clk_gates6 1>, <&sclk_lcdc0>, <&pd_vop>, <&clk_cpll>;
-		clock-names = "aclk_lcdc", "dclk_lcdc", "hclk_lcdc", "sclk_lcdc", "pd_lcdc", "sclk_pll";
+		//clocks = <&clk_gates6 0>, <&dclk_lcdc0>, <&clk_gates6 1>, <&sclk_lcdc0>, <&pd_vop>, <&clk_cpll>;
+		//clock-names = "aclk_lcdc", "dclk_lcdc", "hclk_lcdc", "sclk_lcdc", "pd_lcdc", "sclk_pll";
+
+		clocks = <&cru ACLK_LCDC0>, <&cru DCLK_LCDC0>, <&cru HCLK_LCDC0>;
+		clock-names = "aclk_lcdc0", "dclk_lcdc0", "hclk_lcdc0";
+
 		rockchip,iommu-enabled = <1>;
 		status = "okay";
 
-		pinctrl-names = "default", "gpio";
+		/*pinctrl-names = "default", "gpio";
 		pinctrl-0 = <&lcdc0_lcdc>;
-		pinctrl-1 = <&lcdc0_gpio>;
+		pinctrl-1 = <&lcdc0_gpio>;*/
 
 		rockchip,fb-win-map = <FB_DEFAULT_ORDER>;
-		rockchip,fb-win-map = <FB0_WIN0_FB1_WIN1_FB2_WIN2>;
-		power_ctr: power_ctr {
+		//rockchip,fb-win-map = <FB0_WIN0_FB1_WIN1_FB2_WIN2>;
+		power_ctr0: power_ctr {
 			rockchip,debug = <1>;
-			lcd_en: lcd_en {
+			lcd_en0: lcd_en {
 				rockchip,power_type = <GPIO>;
 				//gpios = <&gpio3 GPIO_C4 GPIO_ACTIVE_HIGH>;
 				//gpios = <&gpio0 GPIO_B0 &pcfg_pull_none>;
-				gpios = <&gpio0 RK_PB0 &pcfg_pull_none>;
+				//gpios = <&gpio0 RK_PB0 &pcfg_pull_none>;
+				gpios = <&gpio0 RK_PB0 &pcfg_pull_down>;
 				//gpios = <0 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
 				rockchip,delay = <10>;
 			};
-			lcd_cs:lcd_cs {
+			lcd_cs0: lcd_cs {
 				rockchip,power_type = <GPIO>;
-				gpios = <&gpio2 GPIO_D6 GPIO_ACTIVE_HIGH>;
+				//gpios = <&gpio2 GPIO_D6 GPIO_ACTIVE_HIGH>;
+				//gpios = <&gpio2 RK_PD6 GPIO_ACTIVE_HIGH>;
+				gpios = <&gpio2 RK_PD6 &pcfg_pull_up>;
 				rockchip,delay = <10>;
 			};
 			/*lcd_rst:lcd_rst {
@@ -217,31 +232,38 @@
 		rockchip,prop = <PRMRY>;
 		reg = <0x1010e000 0x2000>;
 		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-		clocks = <&clk_gates6 0>, <&dclk_lcdc1>, <&clk_gates6 1>, <&sclk_lcdc1>, <&pd_vop>, <&clk_cpll>;
-		clock-names = "aclk_lcdc", "dclk_lcdc", "hclk_lcdc", "sclk_lcdc", "pd_lcdc", "sclk_pll";
-		rockchip,iommu-enabled = <1>;
-		status = "disabled";
+		//clocks = <&clk_gates6 0>, <&dclk_lcdc1>, <&clk_gates6 1>, <&sclk_lcdc1>, <&pd_vop>, <&clk_cpll>;
+		//clock-names = "aclk_lcdc", "dclk_lcdc", "hclk_lcdc", "sclk_lcdc", "pd_lcdc", "sclk_pll";
 
-		pinctrl-names = "default", "gpio";
+		clocks = <&cru ACLK_LCDC1>, <&cru DCLK_LCDC1>, <&cru HCLK_LCDC1>;
+		clock-names = "aclk_lcdc1", "dclk_lcdc1", "hclk_lcdc1";
+
+		rockchip,iommu-enabled = <1>;
+		//status = "disabled";
+		status = "okay";
+
+		/*pinctrl-names = "default", "gpio";
 		pinctrl-0 = <&lcdc1_lcdc>;
-		pinctrl-1 = <&lcdc1_gpio>;
+		pinctrl-1 = <&lcdc1_gpio>;*/
 
 		rockchip,fb-win-map = <FB_DEFAULT_ORDER>;
-		rockchip,fb-win-map = <FB0_WIN0_FB1_WIN1_FB2_WIN2>;
-		power_ctr: power_ctr {
+		//rockchip,fb-win-map = <FB0_WIN0_FB1_WIN1_FB2_WIN2>;
+		power_ctr1: power_ctr {
 			rockchip,debug = <1>;
 			rockchip,mirror = <NO_MIRROR>;
-			lcd_en: lcd_en {
+			lcd_en1: lcd_en {
 				rockchip,power_type = <GPIO>;
 				//gpios = <&gpio3 GPIO_C4 GPIO_ACTIVE_HIGH>;
 				//gpios = <&gpio0 GPIO_B0 &pcfg_pull_none>;
-				gpios = <&gpio0 RK_PB0 &pcfg_pull_none>;
+				//gpios = <&gpio0 RK_PB0 &pcfg_pull_none>;
+				gpios = <&gpio0 RK_PB0 &pcfg_pull_down>;
 				//gpios = <0 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
 				rockchip,delay = <10>;
 			};
-			lcd_cs:lcd_cs {
+			lcd_cs1:lcd_cs {
 				rockchip,power_type = <GPIO>;
-				gpios = <&gpio2 GPIO_D6 GPIO_ACTIVE_HIGH>;
+				//gpios = <&gpio2 GPIO_D6 GPIO_ACTIVE_HIGH>;
+				gpios = <&gpio2 RK_PD6 &pcfg_pull_up>;
 				rockchip,delay = <10>;
 			};
 			/*lcd_rst:lcd_rst {
@@ -329,6 +351,10 @@
 &wdt {
 	status = "okay";
 };
+
+/*&i2s {
+	status = "okay";
+};*/
 
 &i2s0 {
 	status = "okay";
@@ -472,31 +498,37 @@
 &i2c4 {
 	status = "okay";
 	rk1000_control@40 {
-		compatible = "rockchip,rk1000_control";
-		reg = <0x40>;
-		gpio-reset = <&gpio7 GPIO_C5 GPIO_ACTIVE_LOW>;
+		compatible = "rockchip,rk1000_control", "rockchip,rk1000-ctl";
+		/*reg = <0x40>;
+		//gpio-reset = <&gpio7 GPIO_C5 GPIO_ACTIVE_LOW>;
+		//gpio-reset = <&gpio7 GPIO_C5 &pcfg_pull_down>;
+		gpio-reset = <&gpio3 RK_PB7 &pcfg_pull_down>;
 		#clocks = <&clk_i2s>, <&clk_i2s_out>;
 		#clock-names = "i2s_clk","i2s_mclk";
 		#pinctrl-names = "default";
 		#pinctrl-0 = <&i2s_mclk>;
-		status = "okay";
+		status = "okay";*/
+		status = "disabled";
 	};
 	rk1000_tve@42 {
-		compatible = "rockchip,rk1000_tve";
-		reg = <0x42>;
+		compatible = "rockchip,rk1000_tve", "rockchip,rk1000-tve";
+		/*reg = <0x42>;
 		#rockchip,source = <0>; //0: LCDC0; 1: LCDC1
 		#rockchip,prop = <PRMRY>;//<EXTEND>
 		rockchip,source = <0>; //0: LCDC0; 1: LCDC1
 		rockchip,prop = <EXTEND>;//<>
-		status = "okay";
+		status = "okay";*/
+		status = "disabled";
 	};
 	rk1000_codec: rk1000_codec@60 {
 		compatible = "rockchip,rk1000_codec";
-		reg = <0x60>;
-		spk_ctl_io = <&gpio7 GPIO_A5 GPIO_ACTIVE_LOW>;
+		/*reg = <0x60>;
+		//spk_ctl_io = <&gpio7 GPIO_A5 GPIO_ACTIVE_LOW>;
+		spk_ctl_io = <&gpio7 GPIO_A5 &pcfg_pull_down>;
 		boot_depop = <1>;
 		pa_enable_time = <5000>;
-		status = "okay";
+		status = "okay";*/
+		status = "disabled";
 	};
 };
 
