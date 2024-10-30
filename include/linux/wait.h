@@ -33,6 +33,16 @@ struct wait_queue_entry {
 	struct list_head	entry;
 };
 
+#ifndef wait_queue_t
+//#define wait_queue_t wait_queue_entry_t
+struct wait_queue_t {
+	unsigned int		flags;
+	void			*private;
+	wait_queue_func_t	func;
+	struct list_head	task_list;
+};
+#endif
+
 struct wait_queue_head {
 	spinlock_t		lock;
 	struct list_head	head;
