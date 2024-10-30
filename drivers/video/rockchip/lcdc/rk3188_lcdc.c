@@ -25,6 +25,8 @@
 #include <linux/init.h>
 #include <linux/interrupt.h>
 #include <linux/platform_device.h>
+#include <linux/pinctrl/devinfo.h>
+//#include <linux/pinctrl/consumer.h>
 #include <linux/clk.h>
 #include <asm/div64.h>
 #include <asm/uaccess.h>
@@ -657,7 +659,7 @@ static int win0_display(struct lcdc_device *lcdc_dev,
 	uv_addr = win->area[0].cbr_start + win->area[0].c_offset;
 	DBG(2, "lcdc%d>>%s:y_addr:0x%x>>uv_addr:0x%x\n",
 	    	lcdc_dev->id, __func__, y_addr, uv_addr);
-	
+
 	spin_lock(&lcdc_dev->reg_lock);
 	if (likely(lcdc_dev->clk_on)) {
 		lcdc_writel(lcdc_dev, WIN0_YRGB_MST0, y_addr);
@@ -690,7 +692,7 @@ static int win1_display(struct lcdc_device *lcdc_dev,
 
 static int rk3188_lcdc_pan_display(struct rk_lcdc_driver *dev_drv, int win_id)
 {
-	struct lcdc_device *lcdc_dev = container_of(dev_drv, 
+	struct lcdc_device *lcdc_dev = container_of(dev_drv,
 						struct lcdc_device, driver);
 	struct rk_lcdc_win *win = NULL;
 	struct rk_screen *screen = dev_drv->cur_screen;
@@ -704,7 +706,7 @@ static int rk3188_lcdc_pan_display(struct rk_lcdc_driver *dev_drv, int win_id)
 		dev_err(dev_drv->dev,"screen is null!\n");
 		return -ENOENT;
 	}
-	
+
 	if (win_id == 0) {
 		win = dev_drv->win[0];
 		win0_display(lcdc_dev, win);
@@ -799,7 +801,7 @@ static int win0_set_par(struct lcdc_device *lcdc_dev,
 		yact, win->area[0].xsize, win->area[0].ysize, xvir, yvir, xpos, ypos);
 
 	spin_lock(&lcdc_dev->reg_lock);
-	
+
 	win->scale_yrgb_x = ScaleYrgbX;
 	win->scale_yrgb_y = ScaleYrgbY;
 	win->scale_cbcr_x = ScaleCbrX;
@@ -807,7 +809,7 @@ static int win0_set_par(struct lcdc_device *lcdc_dev,
 	win->area[0].fmt_cfg = fmt_cfg;
 	win->area[0].dsp_stx = xpos;
 	win->area[0].dsp_sty = ypos;
-	
+
 	switch (win->area[0].format) {
 	case XBGR888:
 	case ABGR888:
@@ -833,11 +835,11 @@ static int win0_set_par(struct lcdc_device *lcdc_dev,
 		break;
 	}
 
-	
+
 	if (likely(lcdc_dev->clk_on)) {
 		lcdc_writel(lcdc_dev, WIN0_SCL_FACTOR_YRGB,v_X_SCL_FACTOR(ScaleYrgbX) | v_Y_SCL_FACTOR(ScaleYrgbY));
 		lcdc_writel(lcdc_dev, WIN0_SCL_FACTOR_CBR,v_X_SCL_FACTOR(ScaleCbrX) | v_Y_SCL_FACTOR(ScaleCbrY));
-		lcdc_msk_reg(lcdc_dev, SYS_CTRL,m_WIN0_FORMAT,v_WIN0_FORMAT(fmt_cfg));         
+		lcdc_msk_reg(lcdc_dev, SYS_CTRL,m_WIN0_FORMAT,v_WIN0_FORMAT(fmt_cfg));
 		lcdc_writel(lcdc_dev, WIN0_ACT_INFO,v_ACT_WIDTH(xact) | v_ACT_HEIGHT(yact));
 		lcdc_writel(lcdc_dev, WIN0_DSP_ST,v_DSP_STX(xpos) | v_DSP_STY(ypos));
 		lcdc_writel(lcdc_dev, WIN0_DSP_INFO,v_DSP_WIDTH(win->area[0].xsize) |
@@ -849,7 +851,7 @@ static int win0_set_par(struct lcdc_device *lcdc_dev,
 		lcdc_msk_reg(lcdc_dev, WIN0_COLOR_KEY, m_COLOR_KEY_EN, v_COLOR_KEY_EN(0));
 	}
 	spin_unlock(&lcdc_dev->reg_lock);
-	
+
 	return 0;
 
 }
@@ -928,7 +930,7 @@ static int rk3188_lcdc_set_par(struct rk_lcdc_driver *dev_drv,int win_id)
 		dev_err(dev_drv->dev, "screen is null!\n");
 		return -ENOENT;
 	}
-	
+
 	if (win_id == 0) {
 		win = dev_drv->win[0];
 		win0_set_par(lcdc_dev, screen, win);
@@ -939,7 +941,7 @@ static int rk3188_lcdc_set_par(struct rk_lcdc_driver *dev_drv,int win_id)
 		dev_err(dev_drv->dev, "un supported win number:%d\n", win_id);
 		return -EINVAL;
 	}
-	
+
 	if (lcdc_dev->clk_on) {
 		rk3188_lcdc_alpha_cfg(lcdc_dev);
 	}
@@ -986,7 +988,7 @@ static int rk3188_lcdc_early_suspend(struct rk_lcdc_driver *dev_drv)
 
 	struct lcdc_device *lcdc_dev = container_of(dev_drv,
 					struct lcdc_device, driver);
-	if (dev_drv->suspend_flag) 
+	if (dev_drv->suspend_flag)
 		return 0;
 	dev_drv->suspend_flag = 1;
 	flush_kthread_worker(&dev_drv->update_regs_worker);
@@ -1056,7 +1058,7 @@ static int rk3188_lcdc_early_resume(struct rk_lcdc_driver *dev_drv)
 
 		spin_unlock(&lcdc_dev->reg_lock);
 	}
-	
+
 	if (dev_drv->trsm_ops && dev_drv->trsm_ops->enable)
 		dev_drv->trsm_ops->enable();
 	return 0;
@@ -1077,7 +1079,7 @@ static int rk3188_lcdc_blank(struct rk_lcdc_driver *dev_drv,
 		rk3188_lcdc_early_suspend(dev_drv);
 		break;
 	}
-	
+
 	dev_info(dev_drv->dev, "blank mode:%d\n", blank_mode);
 
 	return 0;
@@ -1430,7 +1432,7 @@ static int rk3188_lcdc_get_dsp_addr(struct rk_lcdc_driver *dev_drv,unsigned int 
 
 static int rk3188_lcdc_cfg_done(struct rk_lcdc_driver *dev_drv)
 {
-	struct lcdc_device *lcdc_dev = container_of(dev_drv, 
+	struct lcdc_device *lcdc_dev = container_of(dev_drv,
 					struct lcdc_device, driver);
 	spin_lock(&lcdc_dev->reg_lock);
 	if (lcdc_dev->clk_on)
@@ -1488,7 +1490,7 @@ static irqreturn_t rk3188_lcdc_isr(int irq, void *dev_id)
 		lcdc_msk_reg(lcdc_dev, INT_STATUS, m_FS_INT_CLEAR,
 			     v_FS_INT_CLEAR(1));
 		//if (lcdc_dev->driver.wait_fs) {
-		if (0) {	
+		if (0) {
 			spin_lock(&(lcdc_dev->driver.cpl_lock));
 			complete(&(lcdc_dev->driver.frame_done));
 			spin_unlock(&(lcdc_dev->driver.cpl_lock));
@@ -1612,7 +1614,7 @@ static int rk3188_lcdc_probe(struct platform_device *pdev)
 		return ret;
 	}
 	lcdc_dev->screen = dev_drv->screen0;
-	
+
 	dev_info(dev, "lcdc%d probe ok\n", lcdc_dev->id);
 
 	return 0;
