@@ -81,8 +81,13 @@ struct i2c_msg {
 #define I2C_M_REV_DIR_ADDR	0x2000	/* if I2C_FUNC_PROTOCOL_MANGLING */
 #define I2C_M_NOSTART		0x4000	/* if I2C_FUNC_NOSTART */
 #define I2C_M_STOP		0x8000	/* if I2C_FUNC_PROTOCOL_MANGLING */
+#define I2C_M_NEED_DELAY	0x0020  // add by kfx
+#define I2C_M_REG8_DIRECT	0x0040	// add by kfx
 	__u16 len;		/* msg length				*/
 	__u8 *buf;		/* pointer to msg data			*/
+	__u32 scl_rate;  // add by kfx
+	int udelay;		//add by kfx
+	__u16 read_type;
 };
 
 /* To determine what functionality is present */

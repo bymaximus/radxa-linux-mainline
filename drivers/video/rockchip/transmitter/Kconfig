@@ -11,7 +11,7 @@ config RK2928_LVDS
 config RK3026_LVDS
 	depends on ARCH_RK3026 && RK_TRSM
 	bool "RK3026/RK3028A lvds transmitter support"
-	default y	
+	default y
 
 config RK32_LVDS
 	bool "RK32 lvds transmitter support"
@@ -25,7 +25,7 @@ config RK31XX_LVDS
 
 config RK610_LVDS
 	bool "RK610(Jetta) lvds transmitter support"
-	depends on MFD_RK610 && RK_TRSM 
+	depends on MFD_RK610 && RK_TRSM
 	help
 		Support Jetta(RK610) to output LCD1 and LVDS.
 
@@ -34,7 +34,7 @@ config RK616_LVDS
         depends on MFD_RK616 && RK_TRSM
         help
            RK616(Jetta B) LVDS,LCD,scaler transmitter support.
-		
+
 
 config DP_ANX6345
 	bool "RGB to DisplayPort transmitter anx6345,anx9804,anx9805 support"
@@ -51,7 +51,6 @@ config RK32_DP
 config RK_VGA
          bool "VGA support on RockChip platform"
          depends on RK_TRSM
-         default y
          help
            say y here will enable VGA on RockChip platform
 
@@ -75,13 +74,13 @@ config RK32_MIPI_DSI
         tristate "rk32 mipi dsi support"
         depends on MIPI_DSI
         help
-           Rockchip mipi dsi support.		
+           Rockchip mipi dsi support.
 
-			
+
 config RK616_MIPI_DSI_RST
 	bool "Reset the rockchip mipi dsi"
 	depends on MFD_RK616 && RK616_MIPI_DSI && RK616_USE_MCLK_12M
 	default y
 	help
-	 if you say y here: inset the hdmi, mipi lcd will be reset. 
+	 if you say y here: inset the hdmi, mipi lcd will be reset.
 
