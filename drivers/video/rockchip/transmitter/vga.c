@@ -11,12 +11,13 @@
 #include <linux/of_gpio.h>
 #endif
 
-#include "../../edid.h"
+//#include "../../edid.h"
+#include "../../fbdev/edid.h"
 
 #ifdef CONFIG_SWITCH
 #include <linux/switch.h>
 #endif
-	
+
 
 #define DDC_ADDR		0x50
 #define DDC_I2C_RATE		100*1000
@@ -26,12 +27,12 @@
 #define DISPLAY_SOURCE_LCDC0    0
 #define DISPLAY_SOURCE_LCDC1    1
 
-//static char *vgaenvent[] = {"INTERFACE=VGA", NULL}; 
+//static char *vgaenvent[] = {"INTERFACE=VGA", NULL};
 
 static const struct fb_videomode rk29_mode[] = {
 	//name			refresh		xres	yres	pixclock			h_bp	h_fp	v_bp	v_fp	h_pw	v_pw	polariry	PorI	flag(used for vic)
 {	"1024x768p@60Hz",	60,		1024,	768,	KHZ2PICOS(65000),	160,	24,	29,	3,	136,	6,		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,			0,		0	},
-{	"1280x720p@60Hz",	60,		1280,	720,	KHZ2PICOS(74250),	220,	110,	20,	5,	40,	5,		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,			0,		0	},	
+{	"1280x720p@60Hz",	60,		1280,	720,	KHZ2PICOS(74250),	220,	110,	20,	5,	40,	5,		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,			0,		0	},
 {	"1280x1024p@60Hz",	60,		1280,	1024,	KHZ2PICOS(108000),	248,	48,	38,	1,	112,	3,		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,			0,		0	},
 {	"1366x768p@60Hz",	60,		1366,	768,	KHZ2PICOS(85500),	213,	70,	24,	3,	143,	3,		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,			0,		0	},
 {	"1440x900p@60Hz",	60,		1440,	900,	KHZ2PICOS(116500),	232,	80,	25,	3,	152,	6,		FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,			0,		0	},
@@ -90,7 +91,7 @@ static unsigned char *rk29fb_ddc_read(struct i2c_client *client)
 		dev_err(&client->dev, "unable to allocate memory for EDID\n");
 		return NULL;
 	}
-	
+
 	/*Check ddc i2c communication is available or not*/
 	rc = i2c_master_reg8_recv(client, 0, buf, 6, DDC_I2C_RATE);
 	if (rc == 6) {
@@ -109,7 +110,7 @@ static int vga_mode2screen(struct fb_videomode *modedb, struct rk_screen *screen
 {
 	if(modedb == NULL || screen == NULL)
 		return -1;
-		
+
 	memset(screen, 0, sizeof(struct rk_screen));
 	memcpy(&screen->mode, modedb, sizeof(*modedb));
 	screen->mode.pixclock = PICOS2KHZ(screen->mode.pixclock);
@@ -152,8 +153,8 @@ static int vga_switch_screen(struct rockchip_vga *vga, int indx)
 	rk_fb_switch_screen(screen, 1 ,vga->lcdc_id);
 	vga->indx = indx;
 	return 0;
-	
-	
+
+
 }
 static int vga_get_screen_info(struct rockchip_vga *vga)
 {
@@ -176,7 +177,7 @@ static int vga_get_screen_info(struct rockchip_vga *vga)
 			(PICOS2KHZ(specs->modedb[i].pixclock)/250)*250*1000);
 	}
 	return 0;
-	
+
 }
 
 
@@ -243,7 +244,7 @@ void vga_unregister_display_sysfs(struct rockchip_vga *vga)
 
 
 static int vga_i2c_probe(struct i2c_client *client,const struct i2c_device_id *id)
-{    
+{
 	int ret;
 	struct rockchip_vga *vga;
 	struct device_node *np = client->dev.of_node;
@@ -252,7 +253,7 @@ static int vga_i2c_probe(struct i2c_client *client,const struct i2c_device_id *i
 	if (!np) {
 		dev_err(&client->dev, "no device node found!\n");
 		return -EINVAL;
-	} 
+	}
 
 	vga = devm_kzalloc(&client->dev, sizeof(*vga), GFP_KERNEL);
 	if (!vga) {
@@ -267,7 +268,7 @@ static int vga_i2c_probe(struct i2c_client *client,const struct i2c_device_id *i
 	if (IS_ERR(vga->ddev))
 		dev_warn(vga->dev, "Unable to create device for vga :%ld",
 			PTR_ERR(vga->ddev));
-	
+
 	vga->en_pin = of_get_named_gpio_flags(np, "pwr_gpio", 0, &pwr_flags);
 	if (!gpio_is_valid(vga->en_pin)) {
 		dev_err(vga->dev, "failed to get pwr_gpio!\n");
@@ -277,7 +278,7 @@ static int vga_i2c_probe(struct i2c_client *client,const struct i2c_device_id *i
 
 	vga->en_val = (pwr_flags & OF_GPIO_ACTIVE_LOW) ? 0 : 1;
 	vga->lcdc_id = DISPLAY_SOURCE_LCDC1;
-	
+
 	ret = devm_gpio_request(vga->dev, vga->en_pin, "pwr_pin");
 	if(ret < 0) {
 		dev_err(vga->dev, "request for pwr_pin failed!\n ");
@@ -288,13 +289,13 @@ static int vga_i2c_probe(struct i2c_client *client,const struct i2c_device_id *i
 	if (ret < 0)
 		goto err;
 	vga_switch_screen(vga, 7);
-	
+
 	printk("VGA probe successful\n");
 	return 0;
 err:
 	vga_unregister_display_sysfs(vga);
 	return ret;
-	
+
 }
 
 
