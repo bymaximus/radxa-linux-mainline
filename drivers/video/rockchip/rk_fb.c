@@ -2199,12 +2199,9 @@ static int rk_fb_set_wb_buffer(struct fb_info *info,
 		return 0;
 	}
 	if (wb_cfg->phy_addr == 0) {
-		wb_data->ion_handle =
-		    ion_import_dma_buf(rk_fb->ion_client,
-				       wb_cfg->ion_fd);
+		wb_data->ion_handle = ion_import_dma_buf(rk_fb->ion_client, wb_cfg->ion_fd);
 		if (IS_ERR(wb_data->ion_handle)) {
-			pr_info("Could not import handle: %ld\n",
-				(long)wb_data->ion_handle);
+			pr_info("Could not import handle: %ld\n", (long)wb_data->ion_handle);
 			return -EINVAL;
 		}
 		if (dev_drv->iommu_enabled)
@@ -2625,9 +2622,10 @@ static int rk_fb_set_win_config(struct fb_info *info,
 				win_data->win_par[i].win_id);
 		}
 	}
+	#if defined(CONFIG_ION_ROCKCHIP)
 	if (dev_drv->property.feature & SUPPORT_WRITE_BACK)
-		rk_fb_set_wb_buffer(info, &win_data->wb_cfg,
-				    &regs->reg_wb_data);
+		rk_fb_set_wb_buffer(info, &win_data->wb_cfg, &regs->reg_wb_data);
+	#endif
 	if (regs->win_num <= 0)
 		goto err_null_frame;
 
@@ -2802,7 +2800,9 @@ static int rk_fb_ioctl(struct fb_info *info, unsigned int cmd,
 			return -EFAULT;
 		if (!dev_drv->iommu_enabled) {
 			fix->smem_start = hwc_phy[0];
-		} else {
+		}
+		#if defined(CONFIG_ION_ROCKCHIP)
+		else {
 			int usr_fd;
 			struct ion_handle *hdl;
 			//ion_phys_addr_t phy_addr;
@@ -2840,6 +2840,7 @@ static int rk_fb_ioctl(struct fb_info *info, unsigned int cmd,
 			fix->smem_start = phy_addr;
 			ion_hwc[0] = hdl;
 		}
+		#endif
 		break;
 	}
 	case RK_FBIOSET_YUV_ADDR:
@@ -2851,7 +2852,9 @@ static int rk_fb_ioctl(struct fb_info *info, unsigned int cmd,
 			if (!dev_drv->iommu_enabled || !strcmp(info->fix.id, "fb0")) {
 				fix->smem_start = yuv_phy[0];
 				fix->mmio_start = yuv_phy[1];
-			} else {
+			}
+			#if defined(CONFIG_ION_ROCKCHIP)
+			else {
 				int usr_fd, offset, tmp;
 				struct ion_handle *hdl;
 				//ion_phys_addr_t phy_addr;
@@ -2903,6 +2906,7 @@ static int rk_fb_ioctl(struct fb_info *info, unsigned int cmd,
 					ion_hanle[tmp] = ion_hanle[tmp - 1];
 				ion_hanle[0] = 0;
 			}
+			#endif
 			break;
 		}
 	case RK_FBIOSET_ENABLE:
