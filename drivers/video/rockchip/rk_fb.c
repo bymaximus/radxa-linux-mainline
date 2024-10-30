@@ -3709,7 +3709,7 @@ int rk_fb_switch_screen(struct rk_screen *screen, int enable, int lcdc_id)
 			 *  the layer which attached to this device
 			 */
 			//flush_kthread_worker(&dev_drv->update_regs_worker);
-			kthread_flush_work(&dev_drv->update_regs_worker);
+			kthread_flush_worker(&dev_drv->update_regs_worker);
 			for (i = 0; i < dev_drv->lcdc_win_num; i++) {
 				if (dev_drv->win[i] && dev_drv->win[i]->state)
 					dev_drv->ops->open(dev_drv, i, 0);
@@ -4589,7 +4589,7 @@ int rk_fb_set_car_reverse_status(struct rk_lcdc_driver *dev_drv,
 	if (status) {
 		car_reversing = 1;
 		//flush_kthread_worker(&dev_drv->update_regs_worker);
-		kthread_flush_work(&dev_drv->update_regs_worker);
+		kthread_flush_worker(&dev_drv->update_regs_worker);
 		dev_drv->timeline_max++;
 #ifdef H_USE_FENCE
 		sw_sync_timeline_inc(dev_drv->timeline, 1);
