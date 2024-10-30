@@ -62,6 +62,8 @@
  *                wakeup devices users need to implement wakeup detection in
  *                their interrupt handlers.
  */
+#define IRQF_DISABLED		0x00000020
+#define IRQF_SAMPLE_RANDOM	0x00000040
 #define IRQF_SHARED		0x00000080
 #define IRQF_PROBE_SHARED	0x00000100
 #define __IRQF_TIMER		0x00000200
@@ -746,7 +748,7 @@ extern void tasklet_setup(struct tasklet_struct *t,
  * if more than one irq occurred.
  */
 
-#if !defined(CONFIG_GENERIC_IRQ_PROBE) 
+#if !defined(CONFIG_GENERIC_IRQ_PROBE)
 static inline unsigned long probe_irq_on(void)
 {
 	return 0;
