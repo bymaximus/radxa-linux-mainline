@@ -183,7 +183,7 @@ enum {
 	HAL_PIXEL_FORMAT_YCbCr_422_I = 0x14,	// YUY2
 	HAL_PIXEL_FORMAT_YCrCb_NV12 = 0x20,	// YUY2
 	HAL_PIXEL_FORMAT_YCrCb_NV12_VIDEO = 0x21,	// YUY2
-	
+
 	HAL_PIXEL_FORMAT_YCrCb_NV12_10	    = 0x22, // YUV420_1obit
 	HAL_PIXEL_FORMAT_YCbCr_422_SP_10	= 0x23, // YUV422_1obit
 	HAL_PIXEL_FORMAT_YCrCb_444_SP_10	= 0x24, //YUV444_1obit
@@ -643,7 +643,7 @@ struct rk_fb_reg_area_data {
 	u16 yoff;
 	unsigned long smem_start;
 	unsigned long cbr_start;	/*Cbr memory start address*/
-	u32 line_length;	
+	u32 line_length;
 	struct ion_handle *ion_handle;
 #ifdef 	USE_ION_MMU
 	struct dma_buf *dma_buf;
@@ -710,7 +710,7 @@ struct rk_lcdc_driver {
 	char fb2_win_id;
 	char fb3_win_id;
 	char fb4_win_id;
-	
+
 	char mmu_dts_name[40];
 	struct device *mmu_dev;
 	int iommu_enabled;
@@ -803,9 +803,9 @@ struct rk_fb {
 	struct rk_lcdc_driver *lcdc_dev_drv[RK30_MAX_LCDC_SUPPORT];
 	int num_lcdc;
 
-#if defined(CONFIG_ION_ROCKCHIP)
+//#if defined(CONFIG_ION_ROCKCHIP)
        struct ion_client *ion_client;
-#endif
+//#endif
 };
 
 extern int rk_fb_trsm_ops_register(struct rk_fb_trsm_ops *ops, int type);

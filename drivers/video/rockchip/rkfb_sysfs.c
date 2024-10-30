@@ -208,9 +208,9 @@ static int dump_win(struct ion_client *ion_client,
 		return 0;
 	}
 
-	if (ion_handle) {
+	/*if (ion_handle) {
 		vaddr = ion_map_kernel(ion_client, ion_handle);
-	} else if (phys_addr) {
+	} else*/ if (phys_addr) {
 		unsigned long start;
 		unsigned int nr_pages;
 		struct page **pages;
@@ -266,9 +266,9 @@ static int dump_win(struct ion_client *ion_client,
 
 	set_fs(old_fs);
 
-	if (ion_handle)
+	/*if (ion_handle)
 		ion_unmap_kernel(ion_client, ion_handle);
-	else if (vaddr)
+	else */if (vaddr)
 		vunmap(vaddr);
 
 	filp_close(filp, NULL);
