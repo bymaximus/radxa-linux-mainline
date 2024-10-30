@@ -342,6 +342,7 @@ void trace_buffer_dump(struct device *dev, struct rk_lcdc_driver *dev_drv)
 	trace->count_frame++;
 }
 
+#if defined(CONFIG_ION_ROCKCHIP)
 static ssize_t set_dump_buffer(struct device *dev,
 			       struct device_attribute *attr,
 			       const char *buf, size_t count)
@@ -505,6 +506,7 @@ out:
 	mutex_unlock(&dev_drv->front_lock);
 	return count;
 }
+#endif
 
 static ssize_t show_dsp_buffer(struct device *dev,
 			       struct device_attribute *attr, char *buf)
@@ -525,6 +527,7 @@ static ssize_t show_dsp_buffer(struct device *dev,
 }
 extern int __close_fd(struct files_struct *files, unsigned fd);
 
+#if defined(CONFIG_ION_ROCKCHIP)
 static ssize_t set_dsp_buffer(struct device *dev,
 			      struct device_attribute *attr,
 			      const char *buf, size_t count)
@@ -648,6 +651,7 @@ static ssize_t set_dsp_buffer(struct device *dev,
 	kfree(win_config);
 	return count;
 }
+#endif
 
 static ssize_t show_phys(struct device *dev,
 			 struct device_attribute *attr, char *buf)
