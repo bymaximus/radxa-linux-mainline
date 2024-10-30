@@ -184,7 +184,7 @@ struct sync_fence_waiter {
 static inline void sync_fence_waiter_init(struct sync_fence_waiter *waiter,
 					  sync_callback_t callback)
 {
-	INIT_LIST_HEAD(&waiter->work.task_list);
+	INIT_LIST_HEAD(&waiter->work.entry);
 	waiter->callback = callback;
 }
 

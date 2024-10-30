@@ -12,6 +12,7 @@
 #include <uapi/linux/wait.h>
 
 typedef struct wait_queue_entry wait_queue_entry_t;
+typedef struct wait_queue_entry wait_queue_t;
 
 typedef int (*wait_queue_func_t)(struct wait_queue_entry *wq_entry, unsigned mode, int flags, void *key);
 int default_wake_function(struct wait_queue_entry *wq_entry, unsigned mode, int flags, void *key);
@@ -33,7 +34,7 @@ struct wait_queue_entry {
 	struct list_head	entry;
 };
 
-#ifndef wait_queue_t
+/*#ifndef wait_queue_t
 //#define wait_queue_t wait_queue_entry_t
 struct wait_queue_t {
 	unsigned int		flags;
@@ -41,7 +42,7 @@ struct wait_queue_t {
 	wait_queue_func_t	func;
 	struct list_head	task_list;
 };
-#endif
+#endif*/
 
 struct wait_queue_head {
 	spinlock_t		lock;

@@ -318,7 +318,7 @@ int sync_fence_wake_up_wq(wait_queue_t *curr, unsigned mode,
 	struct sync_fence_waiter *wait;
 
 	wait = container_of(curr, struct sync_fence_waiter, work);
-	list_del_init(&wait->work.task_list);
+	list_del_init(&wait->work.entry);
 
 	wait->callback(wait->work.private, wait);
 	return 1;
@@ -359,8 +359,8 @@ int sync_fence_cancel_async(struct sync_fence *fence,
 	int ret = 0;
 
 	spin_lock_irqsave(&fence->wq.lock, flags);
-	if (!list_empty(&waiter->work.task_list))
-		list_del_init(&waiter->work.task_list);
+	if (!list_empty(&waiter->work.entry))
+		list_del_init(&waiter->work.entry);
 	else
 		ret = -ENOENT;
 	spin_unlock_irqrestore(&fence->wq.lock, flags);

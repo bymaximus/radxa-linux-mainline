@@ -161,7 +161,7 @@ static void sync_print_fence(struct seq_file *s, struct sync_fence *fence)
 	}
 
 	spin_lock_irqsave(&fence->wq.lock, flags);
-	list_for_each_entry(pos, &fence->wq.task_list, task_list) {
+	list_for_each_entry(pos, &fence->wq.entry, task_list) {
 		struct sync_fence_waiter *waiter;
 
 		if (pos->func != &sync_fence_wake_up_wq)
