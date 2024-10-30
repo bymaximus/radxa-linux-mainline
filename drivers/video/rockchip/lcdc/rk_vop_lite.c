@@ -1570,7 +1570,8 @@ static int vop_early_suspend(struct rk_lcdc_driver *dev_drv)
 
 	dev_drv->suspend_flag = 1;
 	smp_wmb();
-	flush_kthread_worker(&dev_drv->update_regs_worker);
+	//flush_kthread_worker(&dev_drv->update_regs_worker);
+	kthread_flush_work(&dev_drv->update_regs_worker);
 
 	if (dev_drv->trsm_ops && dev_drv->trsm_ops->disable)
 		dev_drv->trsm_ops->disable();
@@ -2599,7 +2600,8 @@ static void vop_shutdown(struct platform_device *pdev)
 
 	dev_drv->suspend_flag = 1;
 	smp_wmb();
-	flush_kthread_worker(&dev_drv->update_regs_worker);
+	//flush_kthread_worker(&dev_drv->update_regs_worker);
+	kthread_flush_work(&dev_drv->update_regs_worker);
 	kthread_stop(dev_drv->update_regs_thread);
 
 	if (dev_drv->trsm_ops && dev_drv->trsm_ops->disable)

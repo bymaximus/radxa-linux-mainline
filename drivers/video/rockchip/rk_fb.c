@@ -2676,8 +2676,8 @@ static int rk_fb_set_win_config(struct fb_info *info,
 		mutex_lock(&dev_drv->update_regs_list_lock);
 		list_add_tail(&regs->list, &dev_drv->update_regs_list);
 		mutex_unlock(&dev_drv->update_regs_list_lock);
-		queue_kthread_work(&dev_drv->update_regs_worker,
-				   &dev_drv->update_regs_work);
+		//queue_kthread_work(&dev_drv->update_regs_worker, &dev_drv->update_regs_work);
+		kthread_queue_work(&dev_drv->update_regs_worker, &dev_drv->update_regs_work);
 	} else {
 		mutex_lock(&dev_drv->update_regs_list_lock);
 		list_is_empty = list_empty(&dev_drv->update_regs_list) &&
@@ -3708,7 +3708,8 @@ int rk_fb_switch_screen(struct rk_screen *screen, int enable, int lcdc_id)
 			/* If there is more than one lcdc device, we disable
 			 *  the layer which attached to this device
 			 */
-			flush_kthread_worker(&dev_drv->update_regs_worker);
+			//flush_kthread_worker(&dev_drv->update_regs_worker);
+			kthread_flush_work(&dev_drv->update_regs_worker);
 			for (i = 0; i < dev_drv->lcdc_win_num; i++) {
 				if (dev_drv->win[i] && dev_drv->win[i]->state)
 					dev_drv->ops->open(dev_drv, i, 0);
@@ -4334,7 +4335,8 @@ int rk_fb_register(struct rk_lcdc_driver *dev_drv,
 			INIT_LIST_HEAD(&dev_drv->update_regs_list);
 			INIT_LIST_HEAD(&dev_drv->saved_list);
 			mutex_init(&dev_drv->update_regs_list_lock);
-			init_kthread_worker(&dev_drv->update_regs_worker);
+			//init_kthread_worker(&dev_drv->update_regs_worker);
+			kthread_init_worker(&dev_drv->update_regs_worker);
 
 			dev_drv->update_regs_thread =
 			    kthread_run(kthread_worker_fn,
@@ -4346,8 +4348,8 @@ int rk_fb_register(struct rk_lcdc_driver *dev_drv,
 				pr_info("failed to run update_regs thread\n");
 				return err;
 			}
-			init_kthread_work(&dev_drv->update_regs_work,
-					  rk_fb_update_regs_handler);
+			//init_kthread_work(&dev_drv->update_regs_work, rk_fb_update_regs_handler);
+			kthread_init_work(&dev_drv->update_regs_work, rk_fb_update_regs_handler);
 
 			snprintf(time_line_name, sizeof(time_line_name),
 				 "vop%d-timeline", id);
@@ -4586,7 +4588,8 @@ int rk_fb_set_car_reverse_status(struct rk_lcdc_driver *dev_drv,
 
 	if (status) {
 		car_reversing = 1;
-		flush_kthread_worker(&dev_drv->update_regs_worker);
+		//flush_kthread_worker(&dev_drv->update_regs_worker);
+		kthread_flush_work(&dev_drv->update_regs_worker);
 		dev_drv->timeline_max++;
 #ifdef H_USE_FENCE
 		sw_sync_timeline_inc(dev_drv->timeline, 1);

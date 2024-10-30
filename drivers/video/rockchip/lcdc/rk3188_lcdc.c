@@ -991,7 +991,8 @@ static int rk3188_lcdc_early_suspend(struct rk_lcdc_driver *dev_drv)
 	if (dev_drv->suspend_flag)
 		return 0;
 	dev_drv->suspend_flag = 1;
-	flush_kthread_worker(&dev_drv->update_regs_worker);
+	//flush_kthread_worker(&dev_drv->update_regs_worker);
+	kthread_flush_work(&dev_drv->update_regs_worker);
 
 	if (dev_drv->trsm_ops && dev_drv->trsm_ops->disable)
 		dev_drv->trsm_ops->disable();
