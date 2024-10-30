@@ -194,7 +194,7 @@
 		clocks = <&cru ACLK_LCDC0>, <&cru DCLK_LCDC0>, <&cru HCLK_LCDC0>;
 		clock-names = "aclk_lcdc0", "dclk_lcdc0", "hclk_lcdc0";
 
-		rockchip,iommu-enabled = <1>;
+		rockchip,iommu-enabled = <0>;
 		status = "okay";
 
 		/*pinctrl-names = "default", "gpio";
@@ -239,7 +239,7 @@
 		clocks = <&cru ACLK_LCDC1>, <&cru DCLK_LCDC1>, <&cru HCLK_LCDC1>;
 		clock-names = "aclk_lcdc1", "dclk_lcdc1", "hclk_lcdc1";
 
-		rockchip,iommu-enabled = <1>;
+		rockchip,iommu-enabled = <0>;
 		//status = "disabled";
 		status = "okay";
 
