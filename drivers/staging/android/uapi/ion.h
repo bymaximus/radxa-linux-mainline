@@ -33,7 +33,13 @@ enum ion_heap_type {
 			       * must be last so device specific heaps always
 			       * are at the end of this enum
 			       */
+	ION_NUM_HEAPS = 16,
 };
+
+#define ION_HEAP_SYSTEM_MASK		(1 << ION_HEAP_TYPE_SYSTEM)
+#define ION_HEAP_SYSTEM_CONTIG_MASK	(1 << ION_HEAP_TYPE_SYSTEM_CONTIG)
+#define ION_HEAP_CARVEOUT_MASK		(1 << ION_HEAP_TYPE_CARVEOUT)
+#define ION_HEAP_TYPE_DMA_MASK		(1 << ION_HEAP_TYPE_DMA)
 
 #define ION_NUM_HEAP_IDS		(sizeof(unsigned int) * 8)
 
@@ -47,6 +53,13 @@ enum ion_heap_type {
  * when the buffer is mapped for dma
  */
 #define ION_FLAG_CACHED 1
+
+#define ION_FLAG_CACHED_NEEDS_SYNC 2	/*
+					 * mappings of this buffer will created
+					 * at mmap time, if this is set
+					 * caches must be managed
+					 * manually
+					 */
 
 /**
  * DOC: Ion Userspace API
@@ -123,5 +136,61 @@ struct ion_heap_query {
  */
 #define ION_IOC_HEAP_QUERY     _IOWR(ION_IOC_MAGIC, 8, \
 					struct ion_heap_query)
+
+/**
+ * DOC: ION_IOC_FREE - free memory
+ *
+ * Takes an ion_handle_data struct and frees the handle.
+ */
+#define ION_IOC_FREE		_IOWR(ION_IOC_MAGIC, 1, struct ion_handle_data)
+
+/**
+ * DOC: ION_IOC_MAP - get a file descriptor to mmap
+ *
+ * Takes an ion_fd_data struct with the handle field populated with a valid
+ * opaque handle.  Returns the struct with the fd field set to a file
+ * descriptor open in the current address space.  This file descriptor
+ * can then be used as an argument to mmap.
+ */
+#define ION_IOC_MAP		_IOWR(ION_IOC_MAGIC, 2, struct ion_fd_data)
+
+/**
+ * DOC: ION_IOC_SHARE - creates a file descriptor to use to share an allocation
+ *
+ * Takes an ion_fd_data struct with the handle field populated with a valid
+ * opaque handle.  Returns the struct with the fd field set to a file
+ * descriptor open in the current address space.  This file descriptor
+ * can then be passed to another process.  The corresponding opaque handle can
+ * be retrieved via ION_IOC_IMPORT.
+ */
+#define ION_IOC_SHARE		_IOWR(ION_IOC_MAGIC, 4, struct ion_fd_data)
+
+/**
+ * DOC: ION_IOC_IMPORT - imports a shared file descriptor
+ *
+ * Takes an ion_fd_data struct with the fd field populated with a valid file
+ * descriptor obtained from ION_IOC_SHARE and returns the struct with the handle
+ * filed set to the corresponding opaque handle.
+ */
+#define ION_IOC_IMPORT		_IOWR(ION_IOC_MAGIC, 5, struct ion_fd_data)
+
+/**
+ * DOC: ION_IOC_SYNC - syncs a shared file descriptors to memory
+ *
+ * Deprecated in favor of using the dma_buf api's correctly (syncing
+ * will happen automatically when the buffer is mapped to a device).
+ * If necessary should be used after touching a cached buffer from the cpu,
+ * this will make the buffer in memory coherent.
+ */
+#define ION_IOC_SYNC		_IOWR(ION_IOC_MAGIC, 7, struct ion_fd_data)
+
+/**
+ * DOC: ION_IOC_CUSTOM - call architecture specific ion ioctl
+ *
+ * Takes the argument of the architecture specific ioctl to call and
+ * passes appropriate userdata for that ioctl
+ */
+#define ION_IOC_CUSTOM		_IOWR(ION_IOC_MAGIC, 6, struct ion_custom_data)
+
 
 #endif /* _UAPI_LINUX_ION_H */

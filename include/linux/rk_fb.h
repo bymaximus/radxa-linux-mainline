@@ -421,11 +421,11 @@ struct rk_lcdc_win_area {
 	u16 yoff;
 	unsigned long smem_start;
 	unsigned long cbr_start;	/*Cbr memory start address*/
-#if defined(CONFIG_ION_ROCKCHIP)
+//#if defined(CONFIG_ION_ROCKCHIP)
 		struct ion_handle *ion_hdl;
 		int dma_buf_fd;
 		struct dma_buf *dma_buf;
-#endif
+//#endif
 	u16 dsp_stx;
 	u16 dsp_sty;
 	u16 y_vir_stride;
@@ -780,9 +780,9 @@ struct rk_fb_par {
 	u32 fb_size;
 	struct rk_lcdc_driver *lcdc_drv;
 
-#if defined(CONFIG_ION_ROCKCHIP)
+//#if defined(CONFIG_ION_ROCKCHIP)
 	struct ion_handle *ion_hdl;
-#endif
+//#endif
 	u32 reserved[2];
 };
 

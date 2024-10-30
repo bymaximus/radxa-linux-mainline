@@ -1611,13 +1611,11 @@ int rk_fb_sysmmu_fault_handler(struct device *dev,
 void rk_fb_free_wb_buf(struct rk_lcdc_driver *dev_drv,
 		       struct rk_fb_reg_wb_data *wb_data)
 {
-	struct rk_fb *rk_fb = platform_get_drvdata(fb_pdev);
-
+	/*struct rk_fb *rk_fb = platform_get_drvdata(fb_pdev);
 	if (dev_drv->iommu_enabled && wb_data->ion_handle)
-		ion_unmap_iommu(dev_drv->dev, rk_fb->ion_client,
-				wb_data->ion_handle);
+		ion_unmap_iommu(dev_drv->dev, rk_fb->ion_client, wb_data->ion_handle);
 	if (wb_data->ion_handle)
-		ion_free(rk_fb->ion_client, wb_data->ion_handle);
+		ion_free(rk_fb->ion_client, wb_data->ion_handle);*/
 }
 
 void rk_fb_free_dma_buf(struct rk_lcdc_driver *dev_drv,
@@ -1631,14 +1629,12 @@ void rk_fb_free_dma_buf(struct rk_lcdc_driver *dev_drv,
 		area_data = &reg_win_data->reg_area_data[i];
 		index_buf = area_data->index_buf;
 		if (dev_drv->iommu_enabled) {
-			if (area_data->ion_handle != NULL &&
-			    !IS_YUV_FMT(area_data->data_format))
-				ion_unmap_iommu(dev_drv->dev, rk_fb->ion_client,
-						area_data->ion_handle);
+			/*if (area_data->ion_handle != NULL && !IS_YUV_FMT(area_data->data_format))
+				ion_unmap_iommu(dev_drv->dev, rk_fb->ion_client, area_data->ion_handle);**/
 			freed_addr[freed_index++] = area_data->smem_start;
 		}
-		if (area_data->ion_handle != NULL)
-			ion_free(rk_fb->ion_client, area_data->ion_handle);
+		/*if (area_data->ion_handle != NULL)
+			ion_free(rk_fb->ion_client, area_data->ion_handle);*/
 
 		if (area_data->acq_fence)
 			sync_fence_put(area_data->acq_fence);
