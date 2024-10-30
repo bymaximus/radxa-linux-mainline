@@ -179,7 +179,8 @@
 	rk_screen: rk_screen{
 		compatible = "rockchip,screen";
 		//display-timings = <&disp_timings>;
-		#include <dt-bindings/display/screen-timing/lcd-box.dtsi>
+		//#include <dt-bindings/display/screen-timing/lcd-box.dtsi>
+		#include <dt-bindings/display/screen-timing/lcd-radxarockpro.dtsi>
 	};
 
 	lcdc0: lcdc0@1010c000 {
