@@ -1565,6 +1565,7 @@ u32 freed_index;
 #define DUMP_CHUNK 256
 char buf[PAGE_SIZE];
 
+/*
 int rk_fb_sysmmu_fault_handler(struct device *dev,
 			       enum rk_iommu_inttype itype,
 			       unsigned long pgtable_base,
@@ -1605,6 +1606,7 @@ int rk_fb_sysmmu_fault_handler(struct device *dev,
 
 	return 0;
 }
+*/
 
 void rk_fb_free_wb_buf(struct rk_lcdc_driver *dev_drv,
 		       struct rk_fb_reg_wb_data *wb_data)
@@ -4369,11 +4371,10 @@ int rk_fb_register(struct rk_lcdc_driver *dev_drv,
 
 		main_fbi->fbops->fb_open(main_fbi, 1);
 		main_fbi->var.pixclock = dev_drv->pixclock;
-		if (dev_drv->iommu_enabled) {
+		/*if (dev_drv->iommu_enabled) {
 			if (dev_drv->mmu_dev)
-				rockchip_iovmm_set_fault_handler(dev_drv->dev,
-						rk_fb_sysmmu_fault_handler);
-		}
+				rockchip_iovmm_set_fault_handler(dev_drv->dev, rk_fb_sysmmu_fault_handler);
+		}*/
 
 		rk_fb_alloc_buffer(main_fbi);	/* only alloc memory for main fb */
 		dev_drv->uboot_logo = support_uboot_display();
@@ -4541,11 +4542,10 @@ int rk_fb_register(struct rk_lcdc_driver *dev_drv,
 		extend_fbi->var.pixclock = rk_fb->fb[0]->var.pixclock;
 		if (rk_fb->disp_mode == DUAL_LCD) {
 			extend_fbi->fbops->fb_open(extend_fbi, 1);
-			if (dev_drv->iommu_enabled) {
+			/*if (dev_drv->iommu_enabled) {
 				if (dev_drv->mmu_dev)
-					rockchip_iovmm_set_fault_handler(dev_drv->dev,
-									 rk_fb_sysmmu_fault_handler);
-			}
+					rockchip_iovmm_set_fault_handler(dev_drv->dev, rk_fb_sysmmu_fault_handler);
+			}*/
 			rk_fb_alloc_buffer(extend_fbi);
 		}
 	}
