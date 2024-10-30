@@ -2186,7 +2186,8 @@ static int rk_fb_set_wb_buffer(struct fb_info *info,
 			       struct rk_fb_reg_wb_data *wb_data)
 {
 	int ret = 0;
-	ion_phys_addr_t phy_addr;
+	//ion_phys_addr_t phy_addr;
+	phys_addr_t phy_addr;
 	size_t len;
 	u8 fb_data_fmt;
 	struct rk_fb_par *fb_par = (struct rk_fb_par *)info->par;
@@ -2265,7 +2266,8 @@ static int rk_fb_set_win_buffer(struct fb_info *info,
 	u16 uv_x_off = 0, uv_y_off = 0, uv_y_act = 0;
 	u8 is_pic_yuv = 0;
 	u8 ppixel_a = 0, global_a = 0;
-	ion_phys_addr_t phy_addr;
+	//ion_phys_addr_t phy_addr;
+	phys_addr_t phy_addr;
 	int ret = 0;
 	int buff_len = 0;
 
@@ -2803,7 +2805,8 @@ static int rk_fb_ioctl(struct fb_info *info, unsigned int cmd,
 		} else {
 			int usr_fd;
 			struct ion_handle *hdl;
-			ion_phys_addr_t phy_addr;
+			//ion_phys_addr_t phy_addr;
+			phys_addr_t phy_addr;
 			size_t len;
 
 			usr_fd = hwc_phy[0];
@@ -2851,7 +2854,8 @@ static int rk_fb_ioctl(struct fb_info *info, unsigned int cmd,
 			} else {
 				int usr_fd, offset, tmp;
 				struct ion_handle *hdl;
-				ion_phys_addr_t phy_addr;
+				//ion_phys_addr_t phy_addr;
+				phys_addr_t phy_addr;
 				size_t len;
 
 				usr_fd = yuv_phy[0];
@@ -2959,7 +2963,8 @@ static int rk_fb_ioctl(struct fb_info *info, unsigned int cmd,
 		{
 			int usr_fd;
 			struct ion_handle *hdl;
-			ion_phys_addr_t phy_addr;
+			//ion_phys_addr_t phy_addr;
+			phys_addr_t phy_addr;
 			size_t len;
 
 			if (copy_from_user(&usr_fd, argp, sizeof(usr_fd)))
@@ -3896,7 +3901,8 @@ static int rk_fb_alloc_buffer_by_ion(struct fb_info *fbi,
 	struct rk_fb_par *fb_par = (struct rk_fb_par *)fbi->par;
 	struct rk_lcdc_driver *dev_drv = fb_par->lcdc_drv;
 	struct ion_handle *handle;
-	ion_phys_addr_t phy_addr;
+	//ion_phys_addr_t phy_addr;
+	phys_addr_t phy_addr;
 	size_t len;
 	int ret = 0;
 
@@ -3956,7 +3962,8 @@ static int rk_fb_alloc_buffer(struct fb_info *fbi)
 	dma_addr_t fb_mem_phys;
 	void *fb_mem_virt;
 #endif
-	ion_phys_addr_t phy_addr;
+	//ion_phys_addr_t phy_addr;
+	phys_addr_t phy_addr;
 	size_t len;
 
 	win_id = dev_drv->ops->fb_get_win_id(dev_drv, fbi->fix.id);
