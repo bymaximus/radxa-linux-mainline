@@ -1296,7 +1296,7 @@
 		status = "disabled";
 	};
 
-	nfc: nand-controller@ff4b0000 {
+	/*nfc: nand-controller@ff4b0000 {
 		compatible = "rockchip,rk3308-nfc",
 			     "rockchip,rv1108-nfc";
 		reg = <0x0 0xff4b0000 0x0 0x4000>;
@@ -1309,7 +1309,7 @@
 			     &flash_rdn &flash_rdy &flash_wrn>;
 		pinctrl-names = "default";
 		status = "disabled";
-	};
+	};*/
 
 	nandc: nandc@ff4b0000 {
 		compatible = "rockchip,rk-nandc";
