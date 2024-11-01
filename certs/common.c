@@ -42,7 +42,7 @@ int load_certificate_list(const u8 cert_list[],
 			pr_err("Problem loading in-kernel X.509 certificate (%ld)\n",
 			       PTR_ERR(key));
 		} else {
-			pr_notice("Loaded X.509 cert '%s'\n",
+			pr_notice("======MAXIMUS Loaded X.509 cert '%s'\n",
 				  key_ref_to_ptr(key)->description);
 			key_ref_put(key);
 		}
