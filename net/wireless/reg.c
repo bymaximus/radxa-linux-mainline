@@ -750,7 +750,7 @@ static void __init load_keys_from_buffer(const u8 *p, unsigned int buflen)
 			pr_err("Problem loading in-kernel X.509 certificate (%ld)\n",
 			       PTR_ERR(key));
 		} else {
-			pr_notice("Loaded X.509 cert '%s'\n",
+			pr_notice("======MAXIMUS WIFI Loaded X.509 cert '%s'\n",
 				  key_ref_to_ptr(key)->description);
 			key_ref_put(key);
 		}

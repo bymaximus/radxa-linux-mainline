@@ -163,7 +163,7 @@ int __init integrity_add_key(const unsigned int id, const void *data,
 		rc = PTR_ERR(key);
 		pr_err("Problem loading X.509 certificate %d\n", rc);
 	} else {
-		pr_notice("Loaded X.509 cert '%s'\n",
+		pr_notice("======MAXIMUS SEC Loaded X.509 cert '%s'\n",
 			  key_ref_to_ptr(key)->description);
 		key_ref_put(key);
 	}
