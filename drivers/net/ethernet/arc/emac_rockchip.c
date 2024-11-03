@@ -40,6 +40,8 @@ static void emac_rockchip_set_mac_speed(void *priv, unsigned int speed)
 	u32 data;
 	int err = 0;
 
+	printk(KERN_WARNING  "emac_rockchip_set_mac_speed:  speed %s \n", speed);
+
 	switch (speed) {
 	case 10:
 		data = (1 << (speed_offset + 16)) | (0 << speed_offset);
@@ -99,6 +101,8 @@ static int emac_rockchip_probe(struct platform_device *pdev)
 	phy_interface_t interface;
 	u32 data;
 	int err;
+
+	printk(KERN_WARNING  "emac_rockchip_probe:  \n");
 
 	if (!pdev->dev.of_node)
 		return -ENODEV;

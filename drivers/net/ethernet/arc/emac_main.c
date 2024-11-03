@@ -425,6 +425,8 @@ static int arc_emac_open(struct net_device *ndev)
 	struct phy_device *phy_dev = ndev->phydev;
 	int i;
 
+	printk(KERN_WARNING  "arc_emac_open:  phy_id %s \n", "aaa");
+
 	phy_dev->autoneg = AUTONEG_ENABLE;
 	phy_dev->speed = 0;
 	phy_dev->duplex = 0;
